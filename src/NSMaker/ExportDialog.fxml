@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Text?>
+<?import java.lang.String?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="NSMaker.ExportDialogController"
+          prefHeight="400.0" prefWidth="700.0" gridLinesVisible="false" fx:id="rootGridPane">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="5" hgrow="ALWAYS"/>
+        <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+        <ColumnConstraints percentWidth="5" hgrow="ALWAYS"/>
+        <ColumnConstraints percentWidth="35" hgrow="ALWAYS"/>
+        <ColumnConstraints percentWidth="5" hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints percentHeight="8.75" vgrow="ALWAYS"/>
+        <RowConstraints percentHeight="82.5" vgrow="ALWAYS"/>
+        <RowConstraints percentHeight="8.75" vgrow="ALWAYS"/>
+    </rowConstraints>
+
+    <StackPane fx:id="previewPane" styleClass="export-preview export-preview-transparent-background"
+               GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER"/>
+    <Text GridPane.rowIndex="2" GridPane.columnIndex="1" textAlignment="CENTER" GridPane.valignment="CENTER" GridPane.halignment="CENTER">Preview</Text>
+
+    <GridPane GridPane.rowIndex="1" GridPane.columnIndex="3">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="90" vgrow="ALWAYS"/>
+            <RowConstraints percentHeight="10" vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <VBox fx:id="exportSidebar" GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="20">
+            <HBox/>
+            <HBox>
+                <FlowPane HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label styleClass="sidebar-label">File type</Label>
+                </FlowPane>
+                <AnchorPane>
+                    <ComboBox fx:id="typeComboBox" value="SVG" HBox.hgrow="ALWAYS" prefWidth="80">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="SVG"/>
+                                <String fx:value="PNG"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </AnchorPane>
+            </HBox>
+            <HBox>
+                <FlowPane HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label styleClass="sidebar-label">Margins</Label>
+                </FlowPane>
+                <AnchorPane>
+                    <Spinner fx:id="marginSizeSpinner" HBox.hgrow="NEVER" prefWidth="80">
+                        <valueFactory>
+                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="1000" initialValue="50"/>
+                        </valueFactory>
+                    </Spinner>
+                </AnchorPane>
+            </HBox>
+            <HBox>
+                <FlowPane HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label styleClass="sidebar-label">Background color</Label>
+                </FlowPane>
+                <AnchorPane>
+                    <ColorPicker fx:id="backgroundColorPicker" styleClass="sidebar-color-picker">
+                        <value>
+                            <Color opacity="0.0"/>
+                        </value>
+                    </ColorPicker>
+                </AnchorPane>
+            </HBox>
+            <HBox>
+                <FlowPane HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label styleClass="sidebar-label">Remove text background</Label>
+                </FlowPane>
+                <FlowPane alignment="CENTER_RIGHT">
+                    <CheckBox fx:id="doRemoveTextBackgroundCheckBox" onAction="#updatePreview"/>
+                </FlowPane>
+            </HBox>
+        </VBox>
+
+        <HBox GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER">
+            <AnchorPane HBox.hgrow="ALWAYS">
+                <Button fx:id="cancelBtn" cancelButton="true" text="Cancel" styleClass="sidebar-button"/>
+            </AnchorPane>
+            <AnchorPane>
+                <Button fx:id="okButton" defaultButton="true" onAction="#export" text="Export" styleClass="sidebar-button"/>
+            </AnchorPane>
+        </HBox>
+    </GridPane>
+</GridPane>

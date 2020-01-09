@@ -1,0 +1,22 @@
+.export-preview {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: white;
+}
+
+.export-preview-transparent-background {
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+}
+
+.sidebar-label {
+    -fx-font-size: 16;
+}
+
+.sidebar-button {
+    -fx-font-size: 18;
+}
+
+.sidebar-color-picker {
+    -fx-color-label-visible: false;
+}
