@@ -150,6 +150,7 @@
 
         </GridPane>
 
-        <Group fx:id="holdingGroup" mouseTransparent="true"/>
     </VBox>
+
+    <Group fx:id="holdingGroup" mouseTransparent="true"/>
 </StackPane>
