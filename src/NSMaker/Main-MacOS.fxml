@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.shape.Box?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.input.KeyCodeCombination?>
+
+<StackPane onMouseMoved="#mouseMoved"
+           alignment="TOP_LEFT"
+           xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="NSMaker.Controller">
+
+    <GridPane gridLinesVisible="true" VBox.vgrow="ALWAYS">
+
+        <MenuBar useSystemMenuBar="true">
+            <Menu fx:id="mMain" text="File">
+                <MenuItem text="New Document" onAction="#newFileAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Open..." onAction="#openFileAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <Menu fx:id="mOpenRecent" text="Open Recent"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Save" onAction="#saveFileAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Save as..." onAction="#saveAsAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="DOWN" shift="DOWN" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Export..." onAction="#exportFileAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="E" control="UP" meta="DOWN" shift="DOWN" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+            <Menu fx:id="mEdit" text="Edit">
+                <MenuItem text="Undo" onAction="#undoAction" fx:id="undoBtn" disable="true">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Redo" onAction="#redoAction" fx:id="redoBtn" disable="true">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="UP" meta="DOWN" shift="DOWN" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <SeparatorMenuItem/>
+                <MenuItem text="Cut">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="X" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Copy">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Paste">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="V" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+            <Menu fx:id="mInsert" text="Insert">
+                <MenuItem text="Action" onAction="#insertAction">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="DIGIT1" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Decision" onAction="#insertDecision">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="DIGIT2" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Top Loop" onAction="#insertTopLoop">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="DIGIT3" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+                <MenuItem text="Bottom Loop" onAction="#insertBotLoop">
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="DIGIT4" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+        </MenuBar>
+
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20" hgrow="ALWAYS"/>
+            <ColumnConstraints percentWidth="80" hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS"/>
+        </rowConstraints>
+
+        <GridPane onMouseClicked="#mouseClickedOnSidebar" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="sidebar">
+            <rowConstraints>
+                <RowConstraints percentHeight="25" vgrow="ALWAYS"/>
+                <RowConstraints percentHeight="25" vgrow="ALWAYS"/>
+                <RowConstraints percentHeight="25" vgrow="ALWAYS"/>
+                <RowConstraints percentHeight="25" vgrow="ALWAYS"/>
+            </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+
+            <FlowPane minWidth="0" minHeight="0" fx:id="sidebarAction" GridPane.columnIndex="0" GridPane.rowIndex="0" alignment="CENTER">
+                <Group onMouseClicked="#actionClicked">
+                    <SVGPath content="m0 0 l200 0 l0 70 l-200 0 z" stroke="black" fill="white"/>
+                    <TextField fx:id="sidebarIconAction" editable="true" prefWidth="180" layoutX="10" layoutY="20" alignment="CENTER">Action</TextField>
+                </Group>
+            </FlowPane>
+            <FlowPane minWidth="0" minHeight="0" fx:id="sidebarDecision" GridPane.columnIndex="0" GridPane.rowIndex="1" alignment="CENTER">
+                <Group onMouseClicked="#decisionClicked">
+                    <SVGPath content="m0 0 l200 0 l -100 70 z" stroke="black" fill="white"/>
+                    <TextField fx:id="sidebarIconDecision" editable="true" prefWidth="100" layoutX="50" layoutY="4" alignment="CENTER">Decision</TextField>
+                </Group>
+            </FlowPane>
+            <FlowPane minWidth="0" minHeight="0" fx:id="sidebarLoopTop" GridPane.columnIndex="0" GridPane.rowIndex="2" alignment="CENTER">
+                <Group onMouseClicked="#topLoopClicked">
+                    <SVGPath content="m0 0 l200 0 l0 47 l-180 0 l0 70 l-20 0 z" stroke="black" fill="white"/>
+                    <TextField fx:id="sidebarIconTopLoop" editable="true" prefWidth="160" layoutX="30" layoutY="10" alignment="CENTER">Loop</TextField>
+                </Group>
+            </FlowPane>
+            <FlowPane minWidth="0" minHeight="0" fx:id="sidebarLoopBot" GridPane.columnIndex="0" GridPane.rowIndex="3" alignment="CENTER">
+                <Group onMouseClicked="#botLoopClicked">
+                    <SVGPath content="m0 0 l20 0 l0 70 l180 0 l0 47 l-200 0 z" stroke="black" fill="white"/>
+                    <TextField fx:id="sidebarIconBotLoop" editable="true" prefWidth="160" layoutX="30" layoutY="80" alignment="CENTER">Loop</TextField>
+                </Group>
+            </FlowPane>
+        </GridPane>
+
+        <ScrollPane hvalue="0.5" vvalue="0.5" hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="editor"/>
+
+    </GridPane>
+
+    <Group fx:id="holdingGroup" mouseTransparent="true"/>
+
+</StackPane>

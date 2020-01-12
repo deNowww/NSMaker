@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
@@ -24,7 +27,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         stage = primaryStage;
         loader = new FXMLLoader();
-        Parent root = loader.load(getClass().getResource("Main-WinLinux.fxml").openStream());
+        Parent root;
+        if (stringContainsItemFromList(System.getProperty("os.name").toLowerCase(), Arrays.asList("osx", "os x", "macos"))) {
+            root = loader.load(getClass().getResource("Main-MacOS.fxml").openStream());
+        } else {
+            root = loader.load(getClass().getResource("Main-WinLinux.fxml").openStream());
+        }
         Document.create();
         stage.setTitle("Untitled - NSMaker");
         Scene scene = new Scene(root, 1200, 750);
@@ -32,6 +40,10 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setOnCloseRequest(areYouSureHandler);
         stage.show();
+    }
+    
+    private static boolean stringContainsItemFromList(String inputStr, List<String> items) {
+        return items.parallelStream().anyMatch(inputStr::contains);
     }
     
     private EventHandler<WindowEvent> areYouSureHandler = event -> {
