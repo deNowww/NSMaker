@@ -24,7 +24,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         stage = primaryStage;
         loader = new FXMLLoader();
-        Parent root = loader.load(getClass().getResource("Main.fxml").openStream());
+        Parent root = loader.load(getClass().getResource("Main-WinLinux.fxml").openStream());
         Document.create();
         stage.setTitle("Untitled - NSMaker");
         Scene scene = new Scene(root, 1200, 750);
