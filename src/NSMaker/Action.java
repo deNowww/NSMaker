@@ -16,6 +16,7 @@ public class Action implements Node {
     public String text;
     public int width = 200;
     public NodeList parent;
+    private String oldText;
     
     private int visualOffsetY = 0;
     
@@ -65,8 +66,10 @@ public class Action implements Node {
         text.setAlignment(Pos.CENTER);
         text.textProperty().addListener(((observableValue, oldValue, newValue) -> this.text = newValue));
         text.focusedProperty().addListener(((observableValue, oldValue, newValue) -> {
-            if (!newValue) {
-                Main.getController().addCurrentStateToHistory();
+            if (newValue) {
+                this.oldText = text.getText();
+            } else {
+                Main.getController().addCurrentStateToHistory(String.format("Action - name change (\"%s -> %s\")", this.oldText, this.text));
             }
         }));
         Group drawGroup = new Group();

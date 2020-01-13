@@ -19,6 +19,7 @@ public class Decision implements Node {
     private int width = 200;
     public NodeList parent;
     public int visualOffsetY = 0;
+    private String oldText;
     
     public Decision(String text, String leftText, String rightText, NodeList parent) {
         this.parent = parent;
@@ -80,6 +81,13 @@ public class Decision implements Node {
         text.setLayoutX(width/4.0);
         text.setAlignment(Pos.CENTER);
         text.textProperty().addListener(((observableValue, oldValue, newValue) -> this.text = newValue));
+        text.focusedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
+                this.oldText = text.getText();
+            } else {
+                Main.getController().addCurrentStateToHistory(String.format("Decision - name change (\"%s -> %s\")", this.oldText, this.text));
+            }
+        }));
         Group rightGroup = right.draw(excludeHitboxes);
         Group leftGroup = left.draw(excludeHitboxes);
         Group drawGroup = new Group();

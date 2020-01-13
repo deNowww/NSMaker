@@ -16,6 +16,7 @@ public class BotLoop extends Loop implements Node {
     
     private NodeList parent;
     public int visualOffsetY = 0;
+    private String oldText;
     
     public BotLoop() {
         super();
@@ -74,6 +75,13 @@ public class BotLoop extends Loop implements Node {
         text.setLayoutX(30);
         text.setAlignment(Pos.CENTER);
         text.textProperty().addListener(((observableValue, oldValue, newValue) -> this.text = newValue));
+        text.focusedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
+                this.oldText = text.getText();
+            } else {
+                Main.getController().addCurrentStateToHistory(String.format("Bottom loop - name change (\"%s -> %s\")", this.oldText, this.text));
+            }
+        }));
         Group drawGroup = new Group();
         drawGroup.setOnMouseClicked(mouseEvent -> Main.getController().clickedOnNode(this, mouseEvent));
         drawGroup.getChildren().addAll(path, text, content);

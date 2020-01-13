@@ -16,13 +16,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.swing.event.DocumentEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -350,7 +348,7 @@ public class Controller {
                 node.setParent(null);
                 break;
         }
-        addCurrentStateToHistory();
+        addCurrentStateToHistory("Placed node " + node.toString()); // todo: minimalToString
         updateEditor();
         mouseEvent.consume();
     }
@@ -395,9 +393,9 @@ public class Controller {
         if (holding != null) {
             Node node = holding;
             Document.addNewRoot(mouseEvent.getX(), mouseEvent.getY(), node);
+            addCurrentStateToHistory("Placed node: " + holding.toString()); // todo: minimalToString
             holding = null;
             holdingGroup.getChildren().clear();
-            addCurrentStateToHistory();
             updateEditor();
         }
     }
@@ -522,7 +520,7 @@ public class Controller {
     public void setUndoHistoryTreeMenu(Menu menu, UndoHistoryTree<String> start) {
         System.out.println(start);
         for (UndoHistoryTree<String> child : start.getChildren()) {
-            CheckMenuItem childMenuItem = new CheckMenuItem("Test " + (child.getPreferredChild() != null));
+            CheckMenuItem childMenuItem = new CheckMenuItem(child.getName());
             if (child == Document.getHistory()) {
                 childMenuItem.setSelected(true);
             }
@@ -549,14 +547,14 @@ public class Controller {
         }
     }
     
-    public void addCurrentStateToHistory() {
+    public void addCurrentStateToHistory(String name) {
         if (undoBtn.isDisable()) {
             undoBtn.setDisable(false);
         }
         if (!redoBtn.isDisable()) {
             redoBtn.setDisable(true);
         }
-        Document.addCurrentStateToHistory();
+        Document.addCurrentStateToHistory(name);
         setUndoHistoryTreeMenu();
     }
 }

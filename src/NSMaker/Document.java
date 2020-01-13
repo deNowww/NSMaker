@@ -48,8 +48,8 @@ public class Document extends NodeList {
         return document;
     }
     
-    public static void addCurrentStateToHistory() {
-        UndoHistoryTree<String> added = document.history.addChild(Jsoner.serialize(document));
+    public static void addCurrentStateToHistory(String name) {
+        UndoHistoryTree<String> added = document.history.addChild(Jsoner.serialize(document), name);
         document.history = added;
         removeAllPreferredChildren();
 //        document.historyLocation += 1;

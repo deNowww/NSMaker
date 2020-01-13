@@ -10,6 +10,7 @@ import javafx.scene.shape.SVGPath;
 public class RightBranch extends Branch {
     
     private int visualOffsetY = 0;
+    private String oldText;
     
     public RightBranch() {
         super();
@@ -63,6 +64,13 @@ public class RightBranch extends Branch {
         text.setLayoutX(width - 5 - (width*0.85)/2.0);
         text.setAlignment(Pos.CENTER);
         text.textProperty().addListener(((observableValue, oldValue, newValue) -> this.text = newValue));
+        text.focusedProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue) {
+                this.oldText = text.getText();
+            } else {
+                Main.getController().addCurrentStateToHistory(String.format("Right branch - name change (\"%s -> %s\")", this.oldText, this.text));
+            }
+        }));
         Group content = super.draw(excludeHitboxes);
         content.setLayoutY(70);
         Group drawGroup = new Group();

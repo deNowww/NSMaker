@@ -7,23 +7,27 @@ public class UndoHistoryTree<T> {
     private UndoHistoryTree<T> preferredChild = null;
     private ArrayList<UndoHistoryTree<T>> children;
     private T content;
+    private String name;
     
     public UndoHistoryTree(T content) {
         this.parent = null;
         this.children = new ArrayList<>();
         this.content = content;
+        this.name = null;
     }
     
     public UndoHistoryTree() {
         this.parent = null;
         this.children = new ArrayList<>();
         this.content = null;
+        this.name = null;
     }
     
-    private UndoHistoryTree(UndoHistoryTree<T> parent, T content) {
+    private UndoHistoryTree(UndoHistoryTree<T> parent, T content, String name) {
         this.parent = parent;
         this.children = new ArrayList<>();
         this.content = content;
+        this.name = name;
     }
     
     public void addChild(UndoHistoryTree<T> child) {
@@ -31,8 +35,8 @@ public class UndoHistoryTree<T> {
         children.add(child);
     }
  
-    public UndoHistoryTree<T> addChild(T childContent) {
-        UndoHistoryTree<T> added = new UndoHistoryTree<>(this, childContent);
+    public UndoHistoryTree<T> addChild(T childContent, String childName) {
+        UndoHistoryTree<T> added = new UndoHistoryTree<>(this, childContent, childName);
         children.add(added);
         return added;
     }
@@ -99,5 +103,13 @@ public class UndoHistoryTree<T> {
     
     public void setPreferredChild(UndoHistoryTree<T> preferredChild) {
         this.preferredChild = preferredChild;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
     }
 }
