@@ -467,13 +467,6 @@ public class Controller {
     }
     
     public void undoAction(ActionEvent actionEvent) {
-//        if (Document.getHistory().getParent().getParent() != null) {
-//            Document.undo();
-//            if (Document.getHistory().getParent().getParent() == null) {
-//                undoBtn.setDisable(true);
-//            }
-//            updateEditor();
-//        }
         Document.undo();
         if (Document.getHistory().getParent() == null) {
             undoBtn.setDisable(true);
@@ -481,6 +474,7 @@ public class Controller {
         if (Document.getHistory().getChildren().size() > 0) {
             redoBtn.setDisable(false);
         }
+        setUndoHistoryTreeMenu();
         updateEditor();
     }
     
@@ -492,11 +486,28 @@ public class Controller {
         if (Document.getHistory().getChildren().size() <= 0) {
             redoBtn.setDisable(true);
         }
+        setUndoHistoryTreeMenu();
         updateEditor();
     }
     
     public void setUndoHistoryTreeMenu() {
+        mUndoHistoryTree.getItems().clear();
+        setUndoHistoryTreeMenu(mUndoHistoryTree, Document.getHistory().getRoot());
+    }
     
+    public void setUndoHistoryTreeMenu(Menu menu, UndoHistoryTree<String> start) {
+        System.out.println(start);
+        for (UndoHistoryTree<String> child : start.getChildren()) {
+            if (child.getChildren().size() > 0) {
+                Menu childMenu = new Menu("Test");
+                menu.getItems().add(childMenu);
+                setUndoHistoryTreeMenu(childMenu, child);
+            } else {
+                MenuItem childMenuItem = new MenuItem("Test");
+                menu.getItems().add(childMenuItem);
+                setUndoHistoryTreeMenu(menu, child);
+            }
+        }
     }
     
     public void addCurrentStateToHistory() {
@@ -507,5 +518,6 @@ public class Controller {
             redoBtn.setDisable(true);
         }
         Document.addCurrentStateToHistory();
+        setUndoHistoryTreeMenu();
     }
 }

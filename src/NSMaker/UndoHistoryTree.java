@@ -41,6 +41,17 @@ public class UndoHistoryTree<T> {
         return this.children;
     }
     
+    public UndoHistoryTree<T> getRoot() {
+        if (this.parent == null) {
+            return this;
+        }
+        UndoHistoryTree<T> nextParent = this.parent;
+        while (nextParent.getParent() != null) {
+            nextParent = nextParent.getParent();
+        }
+        return nextParent;
+    }
+    
     public boolean removeChild(UndoHistoryTree<T> child) {
         return children.remove(child);
     }
@@ -79,7 +90,7 @@ public class UndoHistoryTree<T> {
 //
 //        return s.toString();
         
-        return String.format("content: %s, parent: \n%s", this.content, this.parent);
+        return String.format("content: %s, %d children, parent: \n%s", this.content, this.children.size(), this.parent);
     }
     
     public UndoHistoryTree<T> getPreferredChild() {
