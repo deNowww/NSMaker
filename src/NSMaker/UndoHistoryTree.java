@@ -2,12 +2,9 @@ package NSMaker;
 
 import java.util.ArrayList;
 
-/**
- * currently not in use. will use this at a later date.
- */
-
 public class UndoHistoryTree<T> {
     private UndoHistoryTree<T> parent;
+    private UndoHistoryTree<T> preferredChild = null;
     private ArrayList<UndoHistoryTree<T>> children;
     private T content;
     
@@ -29,7 +26,6 @@ public class UndoHistoryTree<T> {
         this.content = content;
     }
     
-    
     public void addChild(UndoHistoryTree<T> child) {
         child.setParent(this);
         children.add(child);
@@ -39,6 +35,10 @@ public class UndoHistoryTree<T> {
         UndoHistoryTree<T> added = new UndoHistoryTree<>(this, childContent);
         children.add(added);
         return added;
+    }
+    
+    public ArrayList<UndoHistoryTree<T>> getChildren() {
+        return this.children;
     }
     
     public boolean removeChild(UndoHistoryTree<T> child) {
@@ -80,5 +80,13 @@ public class UndoHistoryTree<T> {
 //        return s.toString();
         
         return String.format("content: %s, parent: \n%s", this.content, this.parent);
+    }
+    
+    public UndoHistoryTree<T> getPreferredChild() {
+        return this.preferredChild;
+    }
+    
+    public void setPreferredChild(UndoHistoryTree<T> preferredChild) {
+        this.preferredChild = preferredChild;
     }
 }

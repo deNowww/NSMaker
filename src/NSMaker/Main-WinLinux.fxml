@@ -57,6 +57,7 @@
                         <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
+                <Menu fx:id="mUndoHistoryTree" text="Undo History Tree"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="Cut">
                     <accelerator>

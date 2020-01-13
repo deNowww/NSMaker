@@ -32,6 +32,7 @@ public class Controller {
     
     @FXML public MenuItem undoBtn;
     @FXML public MenuItem redoBtn;
+    @FXML public Menu mUndoHistoryTree;
     @FXML private TextField sidebarIconAction;
     @FXML private TextField sidebarIconDecision;
     @FXML private TextField sidebarIconTopLoop;
@@ -473,23 +474,29 @@ public class Controller {
 //            }
 //            updateEditor();
 //        }
-        if (Document.undo() <= 0) {
+        Document.undo();
+        if (Document.getHistory().getParent() == null) {
             undoBtn.setDisable(true);
         }
-        if (Document.getHistory().size() > 0) {
+        if (Document.getHistory().getChildren().size() > 0) {
             redoBtn.setDisable(false);
         }
         updateEditor();
     }
     
     public void redoAction(ActionEvent actionEvent) {
-        if (Document.redo() + 1 >= Document.getHistory().size()) {
-            redoBtn.setDisable(true);
-        }
-        if (undoBtn.isDisable()) {
+        Document.redo();
+        if (Document.getHistory().getParent() != null) {
             undoBtn.setDisable(false);
         }
+        if (Document.getHistory().getChildren().size() <= 0) {
+            redoBtn.setDisable(true);
+        }
         updateEditor();
+    }
+    
+    public void setUndoHistoryTreeMenu() {
+    
     }
     
     public void addCurrentStateToHistory() {

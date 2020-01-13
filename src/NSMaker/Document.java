@@ -13,8 +13,8 @@ import java.util.List;
 
 public class Document extends NodeList {
     private File file;
-//    private UndoHistoryTree<Document> history;
-    private ArrayList<Document> history = new ArrayList<>();
+    private UndoHistoryTree<String> history = new UndoHistoryTree<>(); // store it as json string in here
+//    private ArrayList<Document> history = new ArrayList<>();
     private int historyLocation = 0;
     private boolean isSaved = true;
     private static Document document;
@@ -32,7 +32,6 @@ public class Document extends NodeList {
     
     protected Document() {
         super();
-//        this.history = new UndoHistoryTree<>();
     }
     
     private Document(File file, JsonArray arr) {
@@ -41,11 +40,7 @@ public class Document extends NodeList {
         Document.updateWidths();
     }
     
-//    public static UndoHistoryTree<Document> getHistory() {
-//        return document.history;
-//    }
-    
-    public static ArrayList<Document> getHistory() {
+    public static UndoHistoryTree<String> getHistory() {
         return document.history;
     }
     
@@ -54,19 +49,19 @@ public class Document extends NodeList {
     }
     
     public static void addCurrentStateToHistory() {
-//        UndoHistoryTree<Document> added = document.history.addChild(Document.snapshotDocument());
-//        document.history = added;
-        document.historyLocation += 1;
-        document.history.add(document.historyLocation, Document.snapshotDocument());
-        for (int i=document.historyLocation+1; i<document.history.size(); ) {
-            document.history.remove(i);
-        }
-        document.isSaved = false;
+        UndoHistoryTree<String> added = document.history.addChild(Jsoner.serialize(document));
+        document.history = added;
+//        document.historyLocation += 1;
+//        document.history.add(document.historyLocation, Document.snapshotDocument());
+//        for (int i=document.historyLocation+1; i<document.history.size(); ) {
+//            document.history.remove(i);
+//        }
+//        document.isSaved = false;
     }
     
-    private static void silentAddCurrentStateToHistory() {
-        document.history.add(document.historyLocation, Document.snapshotDocument());
-    }
+//    private static void silentAddCurrentStateToHistory() {
+//        document.history.add(document.historyLocation, Document.snapshotDocument());
+//    }
     
     public static void setTo(Document newDocument) {
         document.clear();
@@ -76,25 +71,41 @@ public class Document extends NodeList {
         }
     }
     
-    public static int undo() {
+    public static void undo() {
 //        UndoHistoryTree<Document> parent = document.history.getParent();
 //        System.out.println(document.history);
 //        System.out.println(parent.getContent());
 //        document = parent.getContent();
 //        document.history = parent;
-        document.historyLocation -= 1;
+        UndoHistoryTree<String> parent = document.history.getParent();
+        parent.setPreferredChild(document.history);
         try {
-            Document.setTo(document.history.get(document.historyLocation));
-        } catch (IndexOutOfBoundsException ignored) { }
-        return document.historyLocation;
+            document = new Document(document.file, (JsonArray) Jsoner.deserialize(new StringReader(parent.getContent())));
+            document.history = parent;
+        } catch (JsonException e) {
+            e.printStackTrace();
+        }
+//        document.historyLocation -= 1;
+//        try {
+//            Document.setTo(document.history.get(document.historyLocation));
+//        } catch (IndexOutOfBoundsException ignored) { }
+//        return document.historyLocation;
     }
     
-    public static int redo() {
-        document.historyLocation += 1;
-        try {
-            Document.setTo(document.history.get(document.historyLocation));
-        } catch (IndexOutOfBoundsException ignored) { }
-        return document.historyLocation;
+    public static void redo() {
+        UndoHistoryTree<String> preferredChild = document.history.getPreferredChild();
+        try { // may throw nullpointerexception, but that's okay, redo should not be called when there is no preferred child
+            document.history.setPreferredChild(null);
+            document = new Document(document.file, (JsonArray) Jsoner.deserialize(new StringReader(preferredChild.getContent())));
+            document.history = preferredChild;
+        } catch (JsonException e) {
+            e.printStackTrace();
+        }
+//        document.historyLocation += 1;
+//        try {
+//            Document.setTo(document.history.get(document.historyLocation));
+//        } catch (IndexOutOfBoundsException ignored) { }
+//        return document.historyLocation;
     }
     
     public static Document snapshotDocument() {
@@ -144,9 +155,7 @@ public class Document extends NodeList {
     
     public static void create() {
         document = new Document();
-        document.history.clear();
-        document.historyLocation = 0;
-        Document.silentAddCurrentStateToHistory();
+        document.history.setContent(Jsoner.serialize(document));
     }
     
     public static void fromFile(File file) throws FileNotFoundException, JsonException {
@@ -155,7 +164,7 @@ public class Document extends NodeList {
         JsonArray o = (JsonArray) objects.get(0);
     
         document = new Document(file, o);
-        Document.silentAddCurrentStateToHistory();
+        document.history.setContent(Jsoner.serialize(document));
     }
     
     public static void toFile(File file) {
