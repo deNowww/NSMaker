@@ -16,4 +16,5 @@ public interface Node extends Jsonable {
     void setVisualOffsetY(int offset);
     int getVisualOffsetY();
     Node snapshot(NodeList snapshotParent);
+    String minimalToString();
 }

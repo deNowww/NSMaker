@@ -69,7 +69,7 @@ public class Action implements Node {
             if (newValue) {
                 this.oldText = text.getText();
             } else {
-                Main.getController().addCurrentStateToHistory(String.format("Action - name change (\"%s -> %s\")", this.oldText, this.text));
+                Main.getController().addCurrentStateToHistory(String.format("Name: %s -> %s", this.oldText, this.text));
             }
         }));
         Group drawGroup = new Group();
@@ -141,6 +141,11 @@ public class Action implements Node {
         snapshot.width = this.width;
         snapshot.visualOffsetY = this.visualOffsetY;
         return snapshot;
+    }
+    
+    @Override
+    public String minimalToString() {
+        return "Action (" + this.text + ")";
     }
     
 }

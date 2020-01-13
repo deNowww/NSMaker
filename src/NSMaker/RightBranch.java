@@ -41,6 +41,11 @@ public class RightBranch extends Branch {
     }
     
     @Override
+    public String minimalToString() {
+        return "Right branch (" + this.text + ")";
+    }
+    
+    @Override
     public Group draw() {
         return this.draw(false);
     }
@@ -68,7 +73,7 @@ public class RightBranch extends Branch {
             if (newValue) {
                 this.oldText = text.getText();
             } else {
-                Main.getController().addCurrentStateToHistory(String.format("Right branch - name change (\"%s -> %s\")", this.oldText, this.text));
+                Main.getController().addCurrentStateToHistory(String.format("Name: %s -> %s", this.oldText, this.text));
             }
         }));
         Group content = super.draw(excludeHitboxes);

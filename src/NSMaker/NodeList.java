@@ -93,6 +93,14 @@ public class NodeList extends ArrayList<Node> {
         super.add(index, e);
     }
     
+    public String minimalToString() {
+        try {
+            return this.get(0).minimalToString() + " and " + (this.size() - 1) + " others";
+        } catch (IndexOutOfBoundsException e) {
+            return "(empty)";
+        }
+    }
+    
     public void silentAdd(Node e) {
         super.add(e);
     }

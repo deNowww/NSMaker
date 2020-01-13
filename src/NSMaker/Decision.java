@@ -85,7 +85,7 @@ public class Decision implements Node {
             if (newValue) {
                 this.oldText = text.getText();
             } else {
-                Main.getController().addCurrentStateToHistory(String.format("Decision - name change (\"%s -> %s\")", this.oldText, this.text));
+                Main.getController().addCurrentStateToHistory(String.format("Name: %s -> %s", this.oldText, this.text));
             }
         }));
         Group rightGroup = right.draw(excludeHitboxes);
@@ -166,6 +166,11 @@ public class Decision implements Node {
         snapshot.width = this.width;
         snapshot.visualOffsetY = this.visualOffsetY;
         return snapshot;
+    }
+    
+    @Override
+    public String minimalToString() {
+        return "Decision (" + this.text + ")";
     }
     
     public void setWidthFromChildWidth(int width, Node exclude) {

@@ -79,7 +79,7 @@ public class BotLoop extends Loop implements Node {
             if (newValue) {
                 this.oldText = text.getText();
             } else {
-                Main.getController().addCurrentStateToHistory(String.format("Bottom loop - name change (\"%s -> %s\")", this.oldText, this.text));
+                Main.getController().addCurrentStateToHistory(String.format("Name: %s -> %s", this.oldText, this.text));
             }
         }));
         Group drawGroup = new Group();
@@ -156,5 +156,10 @@ public class BotLoop extends Loop implements Node {
             node.setParent(snapshot);
         }
         return snapshot;
+    }
+    
+    @Override
+    public String minimalToString() {
+        return "Bottom loop (" + this.text + ")";
     }
 }

@@ -348,7 +348,7 @@ public class Controller {
                 node.setParent(null);
                 break;
         }
-        addCurrentStateToHistory("Placed node " + node.toString()); // todo: minimalToString
+        addCurrentStateToHistory("Put " + node.minimalToString());
         updateEditor();
         mouseEvent.consume();
     }
@@ -393,7 +393,7 @@ public class Controller {
         if (holding != null) {
             Node node = holding;
             Document.addNewRoot(mouseEvent.getX(), mouseEvent.getY(), node);
-            addCurrentStateToHistory("Placed node: " + holding.toString()); // todo: minimalToString
+            addCurrentStateToHistory("Put " + holding.minimalToString());
             holding = null;
             holdingGroup.getChildren().clear();
             updateEditor();

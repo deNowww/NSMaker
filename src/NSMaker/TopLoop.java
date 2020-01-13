@@ -79,7 +79,7 @@ public class TopLoop extends Loop implements Node {
             if (newValue) {
                 this.oldText = text.getText();
             } else {
-                Main.getController().addCurrentStateToHistory(String.format("Top loop - name change (\"%s -> %s\")", this.oldText, this.text));
+                Main.getController().addCurrentStateToHistory(String.format("Name: %s -> %s", this.oldText, this.text));
             }
         }));
         Group drawGroup = new Group();
@@ -151,5 +151,10 @@ public class TopLoop extends Loop implements Node {
             node.setParent(snapshot);
         }
         return snapshot;
+    }
+    
+    @Override
+    public String minimalToString() {
+        return "Top loop (" + this.text + ")";
     }
 }

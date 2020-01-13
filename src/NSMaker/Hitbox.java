@@ -56,7 +56,7 @@ public class Hitbox extends Rectangle {
                     nodeListParent.add(index, holding);
                 }
                 controller.removeHolding();
-                controller.addCurrentStateToHistory("Placed node: " + holding.toString()); // todo: minimalToString
+                controller.addCurrentStateToHistory("Put " + holding.minimalToString());
                 controller.updateEditor();
                 event.consume();
             }

@@ -135,4 +135,9 @@ public class Root extends NodeList implements Node {
         }
         return snapshot;
     }
+    
+    @Override
+    public String minimalToString() {
+        return super.minimalToString();
+    }
 }
