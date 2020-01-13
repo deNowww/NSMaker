@@ -80,8 +80,7 @@ public class Document extends NodeList {
         UndoHistoryTree<String> parent = document.history.getParent();
         parent.setPreferredChild(document.history);
         try {
-            document = new Document(document.file, (JsonArray) Jsoner.deserialize(new StringReader(parent.getContent())));
-            document.history = parent;
+            setFromHistory(parent);
         } catch (JsonException e) {
             e.printStackTrace();
         }
@@ -92,12 +91,16 @@ public class Document extends NodeList {
 //        return document.historyLocation;
     }
     
+    public static void setFromHistory(UndoHistoryTree<String> undoHistoryTree) throws JsonException {
+        document = new Document(document.file, (JsonArray) Jsoner.deserialize(new StringReader(undoHistoryTree.getContent())));
+        document.history = undoHistoryTree;
+    }
+    
     public static void redo() {
         UndoHistoryTree<String> preferredChild = document.history.getPreferredChild();
         try { // may throw nullpointerexception, but that's okay, redo should not be called when there is no preferred child
             document.history.setPreferredChild(null);
-            document = new Document(document.file, (JsonArray) Jsoner.deserialize(new StringReader(preferredChild.getContent())));
-            document.history = preferredChild;
+            setFromHistory(preferredChild);
         } catch (JsonException e) {
             e.printStackTrace();
         }

@@ -490,6 +490,35 @@ public class Controller {
         updateEditor();
     }
     
+    public static int indexOfHistoryTreeMenuItem(MenuItem menuItem) {
+        Menu parent = menuItem.getParentMenu();
+        int index = 0;
+        for (MenuItem item : parent.getItems()) {
+            if (item instanceof SeparatorMenuItem) {
+                index++;
+            }
+            if (item == menuItem) {
+                break;
+            }
+        }
+        return index;
+    }
+    
+    public UndoHistoryTree<String> getUndoHistoryTreeFromMenuItem(MenuItem menuItem) {
+        ArrayList<Integer> indexes = new ArrayList<>();
+        indexes.add(indexOfHistoryTreeMenuItem(menuItem));
+        Menu parent = menuItem.getParentMenu();
+        while (parent != mUndoHistoryTree) {
+            indexes.add(0, indexOfHistoryTreeMenuItem(parent));
+            parent = parent.getParentMenu();
+        }
+        UndoHistoryTree<String> tree = Document.getHistory().getRoot();
+        for (int index : indexes) {
+            tree = tree.getChildren().get(index);
+        }
+        return tree;
+    }
+    
     public void setUndoHistoryTreeMenu() {
         mUndoHistoryTree.getItems().clear();
         setUndoHistoryTreeMenu(mUndoHistoryTree, Document.getHistory().getRoot());
@@ -498,15 +527,28 @@ public class Controller {
     public void setUndoHistoryTreeMenu(Menu menu, UndoHistoryTree<String> start) {
         System.out.println(start);
         for (UndoHistoryTree<String> child : start.getChildren()) {
+            CheckMenuItem childMenuItem = new CheckMenuItem("Test");
+            if (child == Document.getHistory()) {
+                childMenuItem.setSelected(true);
+            }
+            childMenuItem.setOnAction(event -> {
+                try {
+                    Document.setFromHistory(getUndoHistoryTreeFromMenuItem(childMenuItem));
+                    setUndoHistoryTreeMenu();
+                    updateEditor();
+                } catch (JsonException e) {
+                    e.printStackTrace();
+                }
+            });
             if (child.getChildren().size() > 0) {
-                Menu childMenu = new Menu("Test");
+                Menu childMenu = new Menu();
                 menu.getItems().add(childMenu);
                 setUndoHistoryTreeMenu(childMenu, child);
-            } else {
-                MenuItem childMenuItem = new MenuItem("Test");
-                menu.getItems().add(childMenuItem);
+            }/* else {
                 setUndoHistoryTreeMenu(menu, child);
-            }
+            }*/
+            menu.getItems().add(childMenuItem);
+            menu.getItems().add(new SeparatorMenuItem());
         }
     }
     
