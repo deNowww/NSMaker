@@ -468,24 +468,19 @@ public class Controller {
     
     public void undoAction(ActionEvent actionEvent) {
         Document.undo();
-        if (Document.getHistory().getParent() == null) {
-            undoBtn.setDisable(true);
-        }
-        if (Document.getHistory().getChildren().size() > 0) {
-            redoBtn.setDisable(false);
-        }
+        setUndoRedoBtnDisable();
         setUndoHistoryTreeMenu();
         updateEditor();
     }
     
+    public void setUndoRedoBtnDisable() {
+        undoBtn.setDisable(Document.getHistory().getParent() == null);
+        redoBtn.setDisable(Document.getHistory().getPreferredChild() == null);
+    }
+    
     public void redoAction(ActionEvent actionEvent) {
         Document.redo();
-        if (Document.getHistory().getParent() != null) {
-            undoBtn.setDisable(false);
-        }
-        if (Document.getHistory().getChildren().size() <= 0) {
-            redoBtn.setDisable(true);
-        }
+        setUndoRedoBtnDisable();
         setUndoHistoryTreeMenu();
         updateEditor();
     }
@@ -527,13 +522,15 @@ public class Controller {
     public void setUndoHistoryTreeMenu(Menu menu, UndoHistoryTree<String> start) {
         System.out.println(start);
         for (UndoHistoryTree<String> child : start.getChildren()) {
-            CheckMenuItem childMenuItem = new CheckMenuItem("Test");
+            CheckMenuItem childMenuItem = new CheckMenuItem("Test " + (child.getPreferredChild() != null));
             if (child == Document.getHistory()) {
                 childMenuItem.setSelected(true);
             }
             childMenuItem.setOnAction(event -> {
                 try {
                     Document.setFromHistory(getUndoHistoryTreeFromMenuItem(childMenuItem));
+                    Document.removeAllPreferredChildren();
+                    setUndoRedoBtnDisable();
                     setUndoHistoryTreeMenu();
                     updateEditor();
                 } catch (JsonException e) {

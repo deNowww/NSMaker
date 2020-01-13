@@ -51,12 +51,24 @@ public class Document extends NodeList {
     public static void addCurrentStateToHistory() {
         UndoHistoryTree<String> added = document.history.addChild(Jsoner.serialize(document));
         document.history = added;
+        removeAllPreferredChildren();
 //        document.historyLocation += 1;
 //        document.history.add(document.historyLocation, Document.snapshotDocument());
 //        for (int i=document.historyLocation+1; i<document.history.size(); ) {
 //            document.history.remove(i);
 //        }
 //        document.isSaved = false;
+    }
+    
+    public static void removeAllPreferredChildren() {
+        removeAllPreferredChildren(document.history.getRoot());
+    }
+    
+    private static void removeAllPreferredChildren(UndoHistoryTree<String> start) {
+        for (UndoHistoryTree<String> child : start.getChildren()) {
+            child.setPreferredChild(null);
+            removeAllPreferredChildren(child);
+        }
     }
     
 //    private static void silentAddCurrentStateToHistory() {
@@ -72,11 +84,6 @@ public class Document extends NodeList {
     }
     
     public static void undo() {
-//        UndoHistoryTree<Document> parent = document.history.getParent();
-//        System.out.println(document.history);
-//        System.out.println(parent.getContent());
-//        document = parent.getContent();
-//        document.history = parent;
         UndoHistoryTree<String> parent = document.history.getParent();
         parent.setPreferredChild(document.history);
         try {
@@ -84,11 +91,6 @@ public class Document extends NodeList {
         } catch (JsonException e) {
             e.printStackTrace();
         }
-//        document.historyLocation -= 1;
-//        try {
-//            Document.setTo(document.history.get(document.historyLocation));
-//        } catch (IndexOutOfBoundsException ignored) { }
-//        return document.historyLocation;
     }
     
     public static void setFromHistory(UndoHistoryTree<String> undoHistoryTree) throws JsonException {
